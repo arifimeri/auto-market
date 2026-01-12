@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: automarket_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: automarketdb
+      POSTGRES_USER: arif
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - postgres_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: automarket_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - postgres_network
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  postgres_network:
+    driver: bridge
