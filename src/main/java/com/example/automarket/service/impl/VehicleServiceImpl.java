@@ -4,10 +4,12 @@ import com.example.automarket.entity.Vehicle;
 import com.example.automarket.repository.VehicleRepository;
 import com.example.automarket.service.VehicleService;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository repo;

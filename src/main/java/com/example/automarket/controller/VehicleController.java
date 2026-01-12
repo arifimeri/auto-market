@@ -2,7 +2,6 @@ package com.example.automarket.controller;
 
 import com.example.automarket.entity.Vehicle;
 import com.example.automarket.service.VehicleService;
-import com.example.automarket.service.impl.VehicleServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/vehicles")
+@RequestMapping("/api/vehicles")
 public class VehicleController {
 
     private final VehicleService service;
