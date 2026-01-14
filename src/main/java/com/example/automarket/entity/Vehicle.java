@@ -17,11 +17,12 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     private VehicleType type;
 
-    private String Brand;
+    private String brand;
     private String model;
-    private Integer year;
+    private Integer manufactureYear;
     private String engine;
     private Integer kw;
+    private Integer mileage;
 
     @Enumerated(EnumType.STRING)
     private FuelType fuelType;
