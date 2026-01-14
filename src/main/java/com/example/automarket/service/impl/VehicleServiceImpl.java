@@ -42,7 +42,7 @@ public class VehicleServiceImpl implements VehicleService {
         exisingVehicle.setBrand(vehicle.getBrand());
         exisingVehicle.setModel(vehicle.getModel());
         exisingVehicle.setYear(vehicle.getYear());
-        exisingVehicle.setTransmission(vehicle.getTransmission());
+        exisingVehicle.setTransmissionType(vehicle.getTransmissionType());
         exisingVehicle.setServiceHistory(vehicle.getServiceHistory());
         exisingVehicle.setPrice(vehicle.getPrice());
 

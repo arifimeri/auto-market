@@ -1,5 +1,8 @@
 package com.example.automarket.entity;
 
+import com.example.automarket.enums.FuelType;
+import com.example.automarket.enums.TransmissionType;
+import com.example.automarket.enums.VehicleType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,11 +14,21 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private VehicleType type;
+
     private String Brand;
     private String model;
     private Integer year;
-    private String transmission;
+    private String engine;
+    private Integer kw;
+
+    @Enumerated(EnumType.STRING)
+    private FuelType fuelType;
+
+    @Enumerated(EnumType.STRING)
+    private TransmissionType transmissionType;
+
     private Boolean serviceHistory;
     private Double price;
 
