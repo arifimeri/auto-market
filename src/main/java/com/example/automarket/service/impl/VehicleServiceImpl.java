@@ -1,6 +1,7 @@
 package com.example.automarket.service.impl;
 
 import com.example.automarket.entity.Vehicle;
+import com.example.automarket.exception.VehicleNotFoundException;
 import com.example.automarket.repository.VehicleRepository;
 import com.example.automarket.service.VehicleService;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,8 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Optional<Vehicle> getVehicleById(Long id) {
+        if (repo.findById(id).isEmpty())
+            throw new VehicleNotFoundException("Requested Vehicle does not exist!");
         return repo.findById(id);
     }
 
