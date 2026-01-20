@@ -1,9 +1,10 @@
 package com.example.automarket.service.impl;
 
-import com.example.automarket.entity.Vehicle;
+import com.example.automarket.model.Vehicle;
 import com.example.automarket.exception.VehicleNotFoundException;
 import com.example.automarket.repository.VehicleRepository;
 import com.example.automarket.service.VehicleService;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -25,20 +26,18 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Optional<Vehicle> getVehicleById(Long id) {
-        if (repo.findById(id).isEmpty())
-            throw new VehicleNotFoundException("Requested Vehicle does not exist!");
-        return repo.findById(id);
-    }
+    public Vehicle getVehicleById(Long id){
+        return repo.findById(id).orElse(null);
+    };
 
     @Override
-    public HttpStatus addVehicle(Vehicle vehicle) {
-        repo.save(vehicle);
-        return HttpStatus.CREATED;
+    public Vehicle addVehicle(Vehicle vehicle) {
+      return repo.save(vehicle);
     }
 
+    @Transactional
     @Override
-    public HttpStatus editVehicle(Long id, Vehicle vehicle) {
+    public Vehicle editVehicle(Long id, Vehicle vehicle) {
         Vehicle exisingVehicle = repo.findById(id).orElseThrow();
 
         exisingVehicle.setType(vehicle.getType());
@@ -46,16 +45,15 @@ public class VehicleServiceImpl implements VehicleService {
         exisingVehicle.setModel(vehicle.getModel());
         exisingVehicle.setManufactureYear(vehicle.getManufactureYear());
         exisingVehicle.setTransmissionType(vehicle.getTransmissionType());
+        exisingVehicle.setFuelType(vehicle.getFuelType());
         exisingVehicle.setServiceHistory(vehicle.getServiceHistory());
         exisingVehicle.setPrice(vehicle.getPrice());
 
-        repo.save(exisingVehicle);
-        return HttpStatus.OK;
+        return  repo.save(exisingVehicle);
     }
 
     @Override
-    public HttpStatus deleteVehicle(Long id) {
+    public void deleteVehicle(Long id) {
         repo.deleteById(id);
-        return HttpStatus.OK;
     }
 }

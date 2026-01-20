@@ -1,6 +1,6 @@
 package com.example.automarket.service;
 
-import com.example.automarket.entity.Vehicle;
+import com.example.automarket.model.Vehicle;
 import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.Optional;
@@ -9,11 +9,11 @@ public interface VehicleService {
 
     List<Vehicle> getAllVehicles();
 
-    Optional<Vehicle> getVehicleById(Long id);
+    Vehicle getVehicleById(Long id);
 
-    HttpStatus addVehicle(Vehicle vehicle);
+    Vehicle addVehicle(Vehicle vehicle);
 
-    HttpStatus editVehicle(Long id, Vehicle vehicle);
+    Vehicle editVehicle(Long id, Vehicle vehicle);
 
-    HttpStatus deleteVehicle(Long id);
+    void  deleteVehicle(Long id);
 }

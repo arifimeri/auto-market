@@ -1,4 +1,4 @@
-package com.example.automarket.entity;
+package com.example.automarket.model;
 
 import com.example.automarket.enums.FuelType;
 import com.example.automarket.enums.TransmissionType;
