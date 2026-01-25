@@ -78,23 +78,30 @@ public class DataInitializer implements CommandLineRunner {
         vehicle2.setPrice(94500.00);
         vehicleService.saveVehicle(vehicle4);
 
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword(passwordEncoder.encode("secret"));
-        admin.setRole(Role.ROLE_ADMIN);
-        userService.saveUser(admin);
+        if (!userService.existsByUsername("admin"))
+        {
+            User admin = new User();
+            admin.setUsername("admin");
+            admin.setPassword(passwordEncoder.encode("secret"));
+            admin.setRole(Role.ROLE_ADMIN);
+            userService.saveUser(admin);
+        }
 
-        User user = new User();
-        user.setUsername("user");
-        user.setPassword(passwordEncoder.encode("secret"));
-        user.setRole(Role.ROLE_USER);
-        userService.saveUser(user);
+        if (!userService.existsByUsername("user")) {
+            User user = new User();
+            user.setUsername("user");
+            user.setPassword(passwordEncoder.encode("secret"));
+            user.setRole(Role.ROLE_USER);
+            userService.saveUser(user);
+        }
 
-        User visitor = new User();
-        visitor.setUsername("visitor");
-        visitor.setPassword(passwordEncoder.encode("secret"));
-        visitor.setRole(Role.ROLE_VISITOR);
-        userService.saveUser(visitor);
+        if (!userService.existsByUsername("visitor")) {
+            User visitor = new User();
+            visitor.setUsername("visitor");
+            visitor.setPassword(passwordEncoder.encode("secret"));
+            visitor.setRole(Role.ROLE_VISITOR);
+            userService.saveUser(visitor);
+        }
 
     }
 }
