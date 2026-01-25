@@ -3,6 +3,7 @@ package com.example.automarket.security;
 import com.example.automarket.model.User;
 import com.example.automarket.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +34,5 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getPassword(),
                 List.of(authority)
         );
-
     }
 }

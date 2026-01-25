@@ -33,4 +33,8 @@ public class Vehicle {
     private Boolean serviceHistory;
     private Double price;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }
