@@ -37,7 +37,7 @@ public class DataInitializer implements CommandLineRunner {
         vehicle1.setTransmissionType(TransmissionType.AUTOMATIC);
         vehicle1.setServiceHistory(true);
         vehicle1.setPrice(25000.00);
-        vehicleService.addVehicle(vehicle1);
+        vehicleService.saveVehicle(vehicle1);
 
         Vehicle vehicle2 = new Vehicle();
         vehicle2.setBrand("BMW");
@@ -50,7 +50,7 @@ public class DataInitializer implements CommandLineRunner {
         vehicle2.setTransmissionType(TransmissionType.MANUAL);
         vehicle2.setServiceHistory(true);
         vehicle2.setPrice(16500.00);
-        vehicleService.addVehicle(vehicle2);
+        vehicleService.saveVehicle(vehicle2);
 
         Vehicle vehicle3 = new Vehicle();
         vehicle2.setBrand("Audi");
@@ -63,7 +63,7 @@ public class DataInitializer implements CommandLineRunner {
         vehicle2.setTransmissionType(TransmissionType.AUTOMATIC);
         vehicle2.setServiceHistory(true);
         vehicle2.setPrice(32500.00);
-        vehicleService.addVehicle(vehicle3);
+        vehicleService.saveVehicle(vehicle3);
 
         Vehicle vehicle4 = new Vehicle();
         vehicle2.setBrand("Tesla");
@@ -76,25 +76,25 @@ public class DataInitializer implements CommandLineRunner {
         vehicle2.setTransmissionType(TransmissionType.AUTOMATIC);
         vehicle2.setServiceHistory(true);
         vehicle2.setPrice(94500.00);
-        vehicleService.addVehicle(vehicle4);
+        vehicleService.saveVehicle(vehicle4);
 
         User admin = new User();
         admin.setUsername("admin");
         admin.setPassword(passwordEncoder.encode("secret"));
         admin.setRole(Role.ROLE_ADMIN);
-        userService.save(admin);
+        userService.saveUser(admin);
 
         User user = new User();
         user.setUsername("user");
         user.setPassword(passwordEncoder.encode("secret"));
         user.setRole(Role.ROLE_USER);
-        userService.save(user);
+        userService.saveUser(user);
 
         User visitor = new User();
         visitor.setUsername("visitor");
         visitor.setPassword(passwordEncoder.encode("secret"));
         visitor.setRole(Role.ROLE_VISITOR);
-        userService.save(visitor);
+        userService.saveUser(visitor);
 
     }
 }

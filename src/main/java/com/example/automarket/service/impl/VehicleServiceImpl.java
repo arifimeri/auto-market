@@ -31,7 +31,7 @@ public class VehicleServiceImpl implements VehicleService {
     };
 
     @Override
-    public Vehicle addVehicle(Vehicle vehicle) {
+    public Vehicle saveVehicle(Vehicle vehicle) {
       return repo.save(vehicle);
     }
 

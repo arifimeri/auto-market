@@ -2,11 +2,9 @@ package com.example.automarket.controller;
 
 import com.example.automarket.model.Vehicle;
 import com.example.automarket.service.VehicleService;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/vehicles")
@@ -30,7 +28,7 @@ public class VehicleController {
 
     @PostMapping
     public Vehicle addVehicle(@RequestBody Vehicle vehicle) {
-        return service.addVehicle(vehicle);
+        return service.saveVehicle(vehicle);
     }
 
     @PutMapping("/{id}")

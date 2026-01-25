@@ -1,9 +1,8 @@
 package com.example.automarket.service;
 
 import com.example.automarket.model.Vehicle;
-import org.springframework.http.HttpStatus;
+
 import java.util.List;
-import java.util.Optional;
 
 public interface VehicleService {
 
@@ -11,7 +10,7 @@ public interface VehicleService {
 
     Vehicle getVehicleById(Long id);
 
-    Vehicle addVehicle(Vehicle vehicle);
+    Vehicle saveVehicle(Vehicle vehicle);
 
     Vehicle editVehicle(Long id, Vehicle vehicle);
 
