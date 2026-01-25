@@ -42,12 +42,13 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/**",
-                                "api/test/all",
-                                "h2-console/**",
+                                "/api/test/all",
+                                "/h2-console/**",
+                                "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        .requestMatchers("api/vehicle/**").hasRole("ADMIN")
+                        .requestMatchers("/api/vehicle/**").hasAnyRole("ADMIN", "USER","VISITOR")
                         .anyRequest().authenticated()
                 );
 
