@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenAPIConfig {
 
-
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
@@ -37,4 +36,5 @@ public class OpenAPIConfig {
                 .bearerFormat("JWT")
                 .scheme("bearer");
     }
+
 }

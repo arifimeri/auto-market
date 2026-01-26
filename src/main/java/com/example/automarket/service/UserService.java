@@ -10,9 +10,15 @@ public interface UserService {
 
     User saveUser(User user);
 
+    User editUser(Long id, User user);
+
     void deleteUser(Long id);
 
     boolean existsByUsername(String username);
 
     void save(User newUser);
+
+    User findByUsername(String username);
+
+
 }

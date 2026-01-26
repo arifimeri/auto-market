@@ -3,6 +3,7 @@ package com.example.automarket.model;
 import com.example.automarket.enums.FuelType;
 import com.example.automarket.enums.TransmissionType;
 import com.example.automarket.enums.VehicleType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -33,8 +34,8 @@ public class Vehicle {
     private Boolean serviceHistory;
     private Double price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
-
 }

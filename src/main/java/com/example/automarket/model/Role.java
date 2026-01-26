@@ -1,7 +1,7 @@
 package com.example.automarket.model;
 
 public enum Role {
-    ADMIN,
-    USER,
-    VISITOR,
+    ROLE_ADMIN,
+    ROLE_USER,
+    ROLE_VISITOR,
 };

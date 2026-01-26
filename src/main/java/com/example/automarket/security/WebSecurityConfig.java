@@ -42,17 +42,18 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/auth/**",
+                                "/auth/**",
                                 "/api/test/all",
                                 "/h2-console/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        .requestMatchers("/api/vehicles/**").hasAnyRole("ADMIN", "USER", "VISITOR")
+                        .requestMatchers("/api/car/**").hasAnyRole("ADMIN", "USER", "VISITOR")
                         .anyRequest().authenticated()
                 );
 
+        // Use the bean method directly, no injection needed
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -64,7 +65,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 

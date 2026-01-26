@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
-public class JwtUtil{
+public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -20,19 +20,20 @@ public class JwtUtil{
     private int jwtExpirationMs;
 
     private SecretKey key;
+
     // Initializes the key after the class is instantiated and the jwtSecret is injected,
     // preventing the repeated creation of the key and enhancing performance
     @PostConstruct
-    public void init(){
+    public void init() {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    //Generation JWT token
+    // Generate JWT token
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date ((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -50,15 +51,15 @@ public class JwtUtil{
     public boolean validateJwtToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return  true;
+            return true;
         } catch (SecurityException e) {
             System.out.println("Invalid JWT signature: " + e.getMessage());
         } catch (MalformedJwtException e) {
             System.out.println("Invalid JWT token: " + e.getMessage());
         } catch (ExpiredJwtException e) {
-            System.out.println("JWT token is expired" + e.getMessage());
+            System.out.println("JWT token is expired: " + e.getMessage());
         } catch (UnsupportedJwtException e) {
-            System.out.println("JWT token is unsupported" + e.getMessage());
+            System.out.println("JWT token is unsupported: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             System.out.println("JWT claims string is empty: " + e.getMessage());
         }

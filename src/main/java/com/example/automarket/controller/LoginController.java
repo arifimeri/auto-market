@@ -1,5 +1,6 @@
 package com.example.automarket.controller;
 
+
 import com.example.automarket.model.User;
 import com.example.automarket.security.JwtUtil;
 import com.example.automarket.service.UserService;
@@ -9,10 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -20,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     public final AuthenticationManager authenticationManager;
-    public final UserService           userService;
+    public final UserService userService;
     public final PasswordEncoder       encoder;
-    public final JwtUtil               jwtUtils;
+    public final JwtUtil jwtUtils;
 
     @PostMapping("/login")
     public String authenticateUser(@RequestBody User user) {
@@ -31,18 +29,18 @@ public class LoginController {
                         new UsernamePasswordAuthenticationToken(
                                 user.getUsername(),
                                 user.getPassword()
-                     )
+                        )
                 );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        assert userDetails != null;
         return jwtUtils.generateToken(userDetails.getUsername());
     }
 
-    @PostMapping("/signUp")
+    @PostMapping("/signup")
     public String registerUser(@RequestBody User user) {
         if (userService.existsByUsername(user.getUsername())) {
             return "Error: Username is already taken!";
         }
+        // Create new user's account
         User newUser = new User(
                 user.getUsername(),
                 encoder.encode(user.getPassword())
@@ -51,3 +49,4 @@ public class LoginController {
         return "User registered successfully!";
     }
 }
+
