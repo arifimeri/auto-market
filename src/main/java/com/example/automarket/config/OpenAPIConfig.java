@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenAPIConfig {
 
+
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
@@ -22,13 +23,15 @@ public class OpenAPIConfig {
                         new Components()
                                 .addSecuritySchemes(
                                         "Bearer Authentication", createAPIKeyScheme()
-                                ))
-                                .info(
-                                        new Info()
-                                                .title("My REST API")
-                                                .description("Some custom description of API.")
-                                                .version("1.0"));
+                                )
+                )
+                .info(
+                        new Info()
+                                .title("My REST API")
+                                .description("Some custom description of API.")
+                                .version("1.0"));
     }
+
     private SecurityScheme createAPIKeyScheme() {
         return new SecurityScheme().type(SecurityScheme.Type.HTTP)
                 .bearerFormat("JWT")

@@ -34,6 +34,7 @@ public class LoginController {
                      )
                 );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        assert userDetails != null;
         return jwtUtils.generateToken(userDetails.getUsername());
     }
 

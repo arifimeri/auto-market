@@ -22,7 +22,8 @@ public class WebSecurityConfig {
     private final CustomUserDetailsService userDetailsService;
 
     public WebSecurityConfig(AuthEntryPointJwt unauthorizedHandler,
-                             JwtUtil jwtUtils, CustomUserDetailsService userDetailsService) {
+                             JwtUtil jwtUtils,
+                             CustomUserDetailsService userDetailsService) {
         this.unauthorizedHandler = unauthorizedHandler;
         this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
@@ -48,7 +49,7 @@ public class WebSecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        .requestMatchers("/api/vehicle/**").hasAnyRole("ADMIN", "USER","VISITOR")
+                        .requestMatchers("/api/vehicles/**").hasAnyRole("ADMIN", "USER", "VISITOR")
                         .anyRequest().authenticated()
                 );
 
@@ -63,12 +64,12 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
