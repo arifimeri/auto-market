@@ -1,8 +1,12 @@
 package com.example.automarket.service.impl;
 
+import com.example.automarket.exception.userExeption.UserNotFoundException;
 import com.example.automarket.model.User;
 import com.example.automarket.repository.UserRepository;
 import com.example.automarket.service.UserService;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +33,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User editUser(Long id, User user) {
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found!"));
+
+        checkOwnership(existingUser);
 
         existingUser.setUsername(user.getUsername());
         existingUser.setPassword(user.getPassword());
@@ -40,7 +46,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        User existingUser = userRepository.findById(id)
+                        .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found!"));
+
+            checkOwnership(existingUser);
+            userRepository.deleteById(id);
     }
 
     @Override
@@ -56,6 +66,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+                .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found!"));
+    }
+
+    private void checkOwnership(User user) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (isAdmin)
+            return;
+
+        if (!user.getUsername().equals(auth.getName())) {
+            throw new AccessDeniedException("You have no right to modify this user!");
+        }
     }
 }

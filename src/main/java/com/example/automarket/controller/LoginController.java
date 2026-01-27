@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
 
     public final AuthenticationManager authenticationManager;
-    public final UserService userService;
+    public final UserService           userService;
     public final PasswordEncoder       encoder;
-    public final JwtUtil jwtUtils;
+    public final JwtUtil               jwtUtils;
 
     @PostMapping("/login")
     public String authenticateUser(@RequestBody User user) {

@@ -13,60 +13,48 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/vehicles")
+@RequestMapping("/api/car")
 public class VehicleController {
 
     private final VehicleService vehicleService;
     private final UserService userService;
 
+    // ---------- GET ALL ----------
     @GetMapping
-    public List<Vehicle> getAllVehicles(){
-      return vehicleService.getAllVehicles();
+    public List<Vehicle> getAllVehicles() {
+        return vehicleService.getAllVehicles();
     }
 
+    // ---------- GET BY ID ----------
     @GetMapping("/{id}")
     public Vehicle getVehicleById(@PathVariable Long id) {
         return vehicleService.getVehicleById(id);
     }
 
+    // ---------- CREATE ----------
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public Vehicle addVehicle(@RequestBody Vehicle vehicle, Authentication authentication) {
-        if (authentication.getAuthorities().stream().anyMatch(a ->
-                a.getAuthority()
-                .equals("ROLE_USER"))) {
-
-            User user = userService.findByUsername(authentication.getName());
-            vehicle.setUser(user);
-        }
+    public Vehicle addVehicle(@RequestBody Vehicle vehicle,
+                              Authentication authentication) {
+        User user = userService.findByUsername(authentication.getName());
+        vehicle.setUser(user);
         return vehicleService.saveVehicle(vehicle);
     }
 
+    // ---------- UPDATE ----------
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public Vehicle editVehicle(@RequestBody Vehicle vehicle, @PathVariable Long id, Authentication authentication) {
-        Vehicle existing = vehicleService.getVehicleById(id);
-
-        if (authentication.getAuthorities().stream().anyMatch(a ->
-                a.getAuthority().equals("ROLE_USER"))) {
-            if (!existing.getUser().getUsername().equals(authentication.getName())) {
-                throw new RuntimeException("Not authorized");
-            }
-        }
-
-        return vehicleService.editVehicle(id, vehicle);
+    public Vehicle editVehicle(@PathVariable Long id,
+                               @RequestBody Vehicle vehicle,
+                               Authentication authentication) {
+        return vehicleService.editVehicle(id, vehicle, authentication);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public void deleteVehicle(@PathVariable Long id, Authentication authentication) {
-        Vehicle vehicleExisting = vehicleService.getVehicleById(id);
-
-        if (authentication.getAuthorities().stream().anyMatch(a ->
-                a.getAuthority().equals("ROLE_USER"))) {
-            throw new RuntimeException("Not authorized!");
-        }
-       vehicleService.deleteVehicle(id);
+    public void deleteVehicle(@PathVariable Long id,
+                              Authentication authentication) {
+        vehicleService.deleteVehicle(id, authentication);
     }
 
     @GetMapping("/myVehicles")
