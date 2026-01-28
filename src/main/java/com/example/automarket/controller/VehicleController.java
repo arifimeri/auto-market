@@ -33,7 +33,7 @@ public class VehicleController {
 
     // ---------- CREATE ----------
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public Vehicle addVehicle(@RequestBody Vehicle vehicle,
                               Authentication authentication) {
         User user = userService.findByUsername(authentication.getName());
@@ -43,7 +43,7 @@ public class VehicleController {
 
     // ---------- UPDATE ----------
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public Vehicle editVehicle(@PathVariable Long id,
                                @RequestBody Vehicle vehicle,
                                Authentication authentication) {
@@ -51,14 +51,14 @@ public class VehicleController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public void deleteVehicle(@PathVariable Long id,
                               Authentication authentication) {
         vehicleService.deleteVehicle(id, authentication);
     }
 
     @GetMapping("/myVehicles")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public List<Vehicle> getMyVehicles(Authentication authentication) {
         User user = userService.findByUsername(authentication.getName());
         return vehicleService.getVehiclesByUser(user);
