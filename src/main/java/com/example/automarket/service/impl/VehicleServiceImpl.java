@@ -1,5 +1,6 @@
 package com.example.automarket.service.impl;
 
+import com.example.automarket.exception.vehicleException.VehicleAccessDeniedException;
 import com.example.automarket.exception.vehicleException.VehicleNotFoundException;
 import com.example.automarket.model.User;
 import com.example.automarket.model.Vehicle;
@@ -76,14 +77,15 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     private void checkOwnership(Vehicle vehicle, Authentication auth) {
+        String username = auth.getName();
 
         boolean isAdmin = auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
         if (isAdmin) return;
 
-        if (!vehicle.getUser().getUsername().equals(auth.getName())) {
-            throw new AccessDeniedException("You have no right to do this!");
+        if (!vehicle.getUser().getUsername().equals(username)) {
+            throw new VehicleAccessDeniedException("You do not have permission to edit or delete this vehicle.");
         }
     }
+
 }

@@ -27,4 +27,14 @@ public class VehicleExceptionHandler {
 
         return new ResponseEntity<>(vehicleException, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(VehicleAccessDeniedException.class)
+    public ResponseEntity<VehicleException> handleAccessDenied(VehicleAccessDeniedException ex) {
+        VehicleException vehicleException = new VehicleException(
+                ex.getMessage(),
+                HttpStatus.FORBIDDEN
+        );
+        return new ResponseEntity<>(vehicleException, HttpStatus.FORBIDDEN);
+    }
+
 }
