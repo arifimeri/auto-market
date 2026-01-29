@@ -40,6 +40,12 @@ public class VehicleServiceImpl implements VehicleService {
         return repo.save(vehicle);
     }
 
+    @Override
+    public Boolean existsByBrandAndModelAndEngineAndYear(String brand, String model, String engine, Integer year) {
+        return repo.existsByBrandAndModelAndEngineAndManufactureYear(brand, model, engine, year);
+    }
+
+
     @Transactional
     @Override
     public Vehicle editVehicle(Long id, Vehicle vehicle, Authentication auth) {
@@ -59,6 +65,7 @@ public class VehicleServiceImpl implements VehicleService {
         return repo.save(existing);
     }
 
+    @Transactional
     @Override
     public void deleteVehicle(Long id, Authentication auth) {
         Vehicle existing = getVehicleById(id);

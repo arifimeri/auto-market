@@ -51,15 +51,12 @@ public class WebSecurityConfig {
                         ).permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/car/**").permitAll()
-
                         .requestMatchers(HttpMethod.POST, "/api/car/**")
                         .hasAnyRole("USER", "ADMIN")
-
                         .requestMatchers(HttpMethod.PUT, "/api/car/**")
                         .hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/car/**")
                         .hasAnyRole("USER", "ADMIN")
-
                         .anyRequest().authenticated()
                 );
 

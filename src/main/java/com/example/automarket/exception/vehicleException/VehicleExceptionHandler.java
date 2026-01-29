@@ -12,7 +12,6 @@ public class VehicleExceptionHandler {
     public ResponseEntity<VehicleException> handleVehicleNotFound(VehicleNotFoundException ex) {
         VehicleException vehicleException = new VehicleException(
                 ex.getMessage(),
-                ex.getCause(),
                 HttpStatus.NOT_FOUND
         );
 
@@ -23,7 +22,6 @@ public class VehicleExceptionHandler {
     public ResponseEntity<VehicleException> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         VehicleException vehicleException = new VehicleException(
                 "Invalid vehicle id: " + ex.getValue(),
-                ex,
                 HttpStatus.BAD_REQUEST
         );
 

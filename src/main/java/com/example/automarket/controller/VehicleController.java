@@ -19,31 +19,26 @@ public class VehicleController {
     private final VehicleService vehicleService;
     private final UserService userService;
 
-    // ---------- GET ALL ----------
     @GetMapping
     public List<Vehicle> getAllVehicles() {
         return vehicleService.getAllVehicles();
     }
 
-    // ---------- GET BY ID ----------
     @GetMapping("/{id}")
     public Vehicle getVehicleById(@PathVariable Long id) {
         return vehicleService.getVehicleById(id);
     }
 
-    // ---------- CREATE ----------
     @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public Vehicle addVehicle(@RequestBody Vehicle vehicle,
                               Authentication authentication) {
         User user = userService.findByUsername(authentication.getName());
         vehicle.setUser(user);
         return vehicleService.saveVehicle(vehicle);
     }
-
-    // ---------- UPDATE ----------
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public Vehicle editVehicle(@PathVariable Long id,
                                @RequestBody Vehicle vehicle,
                                Authentication authentication) {
@@ -51,14 +46,14 @@ public class VehicleController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public void deleteVehicle(@PathVariable Long id,
                               Authentication authentication) {
         vehicleService.deleteVehicle(id, authentication);
     }
 
     @GetMapping("/myVehicles")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<Vehicle> getMyVehicles(Authentication authentication) {
         User user = userService.findByUsername(authentication.getName());
         return vehicleService.getVehiclesByUser(user);

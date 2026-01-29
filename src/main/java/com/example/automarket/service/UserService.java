@@ -16,9 +16,9 @@ public interface UserService {
 
     boolean existsByUsername(String username);
 
-    void save(User newUser);
-
     User findByUsername(String username);
 
+    List<String> getRolesForUser(String username);
 
+    User registerUser(User user);
 }

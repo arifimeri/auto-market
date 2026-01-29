@@ -16,7 +16,10 @@ public interface VehicleService {
 
     Vehicle saveVehicle(Vehicle vehicle);
 
+    Boolean existsByBrandAndModelAndEngineAndYear(String brand, String model, String engine, Integer year);
+
     Vehicle editVehicle(Long id, Vehicle vehicle, Authentication authentication);
 
     void  deleteVehicle(Long id, Authentication authentication);
+
 }
