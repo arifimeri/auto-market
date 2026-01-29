@@ -1,7 +1,8 @@
 package com.example.automarket.service.impl;
 
 import com.example.automarket.exception.userExeption.UserNotFoundException;
-import com.example.automarket.model.Role;
+import com.example.automarket.enums.Role;
+import com.example.automarket.exception.userExeption.UsernameAlreadyExistsException;
 import com.example.automarket.model.User;
 import com.example.automarket.repository.UserRepository;
 import com.example.automarket.service.UserService;
@@ -77,12 +78,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registerUser(User user) {
         if (existsByUsername(user.getUsername())) {
-            throw new RuntimeException("Username already taken");
+            throw new UsernameAlreadyExistsException("Username is already taken!");
         }
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
         return userRepository.save(user);
     }
+
 
     private void checkOwnership(User user) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -1,5 +1,6 @@
 package com.example.automarket.model;
 
+import com.example.automarket.enums.Role;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

@@ -3,7 +3,7 @@ package com.example.automarket.config;
 import com.example.automarket.enums.FuelType;
 import com.example.automarket.enums.TransmissionType;
 import com.example.automarket.enums.VehicleType;
-import com.example.automarket.model.Role;
+import com.example.automarket.enums.Role;
 import com.example.automarket.model.User;
 import com.example.automarket.model.Vehicle;
 import com.example.automarket.service.UserService;

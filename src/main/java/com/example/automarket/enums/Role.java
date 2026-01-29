@@ -1,4 +1,4 @@
-package com.example.automarket.model;
+package com.example.automarket.enums;
 
 public enum Role {
     ROLE_ADMIN,
