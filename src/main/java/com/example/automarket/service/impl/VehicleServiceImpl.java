@@ -33,7 +33,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public Vehicle getVehicleById(Long id) {
         return repo.findById(id)
-                .orElseThrow(() -> new VehicleNotFoundException("Vehicle with id " + id + " not found!"));
+                .orElseThrow(() -> new VehicleNotFoundException("Vehicle with id " + id + " doesn't exists!"));
     }
 
     @Override
@@ -45,7 +45,6 @@ public class VehicleServiceImpl implements VehicleService {
     public Boolean existsByBrandAndModelAndEngineAndYear(String brand, String model, String engine, Integer year) {
         return repo.existsByBrandAndModelAndEngineAndManufactureYear(brand, model, engine, year);
     }
-
 
     @Transactional
     @Override

@@ -85,7 +85,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-
     private void checkOwnership(User user) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

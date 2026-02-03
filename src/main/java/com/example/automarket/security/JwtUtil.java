@@ -22,14 +22,11 @@ public class JwtUtil {
 
     private SecretKey key;
 
-    // Initializes the key after the class is instantiated and the jwtSecret is injected,
-    // preventing the repeated creation of the key and enhancing performance
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // Generate JWT token
     public String generateToken(String username, List<String> roles) {
         return Jwts.builder()
                 .setSubject(username)
@@ -40,7 +37,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Get username from JWT token
     public String getUsernameFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key).build()
@@ -49,7 +45,6 @@ public class JwtUtil {
                 .getSubject();
     }
 
-    // Validate JWT token
     public boolean validateJwtToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -75,7 +70,6 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
 
-        // Merr claim "roles" si List
         Object rolesObject = claims.get("roles");
         if (rolesObject instanceof List<?>) {
             return ((List<?>) rolesObject).stream()

@@ -60,7 +60,6 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
                 );
 
-        // Use the bean method directly, no injection needed
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
