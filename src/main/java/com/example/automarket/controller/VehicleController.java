@@ -1,18 +1,18 @@
 package com.example.automarket.controller;
 
-import com.example.automarket.model.User;
-import com.example.automarket.model.Vehicle;
-import com.example.automarket.response.APIResponse;
-import com.example.automarket.service.UserService;
+import com.example.automarket.dto.request.VehicleRequest;
+import com.example.automarket.dto.response.VehicleResponse;
+import com.example.automarket.mapper.VehicleMapper;
 import com.example.automarket.service.VehicleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,51 +20,81 @@ import java.util.List;
 public class VehicleController {
 
     private final VehicleService vehicleService;
-    private final UserService userService;
+    private final VehicleMapper vehicleMapper;
+
+    // ======================
+    // PUBLIC – SEARCH + LIST
+    // ======================
 
     @GetMapping
-    public List<Vehicle> getAllVehicles() {
-        return vehicleService.getAllVehicles();
+    public Page<VehicleResponse> searchVehicles(
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String model,
+            @RequestParam(required = false) Integer priceMin,
+            @RequestParam(required = false) Integer priceMax,
+            @RequestParam(required = false) Integer yearMin,
+            @RequestParam(required = false) Integer yearMax,
+            @RequestParam(required = false) String fuelType,
+            @RequestParam(required = false) String transmission,
+            Pageable pageable
+    ) {
+        return vehicleService
+                .searchVehicles(brand, model, priceMin, priceMax, yearMin, yearMax, fuelType, transmission, pageable)
+                .map(vehicleMapper::toResponse);
     }
 
     @GetMapping("/{id}")
-    public Vehicle getVehicleById(@PathVariable Long id) {
-        return vehicleService.getVehicleById(id);
+    public VehicleResponse getById(@PathVariable Long id) {
+        return vehicleMapper.toResponse(
+                vehicleService.getVehicleById(id)
+        );
+    }
+
+    // ======================
+    // AUTHENTICATED
+    // ======================
+
+    @GetMapping("/my")
+    public Page<VehicleResponse> myVehicles(
+            Authentication auth,
+            Pageable pageable
+    ) {
+        return vehicleService
+                .getVehiclesByUser(auth.getName(), pageable)
+                .map(vehicleMapper::toResponse);
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public ResponseEntity<APIResponse> addVehicle(@RequestBody Vehicle vehicle,
-                                                  Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
-        vehicle.setUser(user);
-        Vehicle savedVehicle = vehicleService.saveVehicle(vehicle);
-        String message = "Vehicle with id " + savedVehicle.getId() + " was created successfully.";
-        return ResponseEntity.ok(new APIResponse(message, HttpStatus.OK));
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<VehicleResponse> create(
+            @Valid @RequestBody VehicleRequest request,
+            Authentication auth
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(vehicleMapper.toResponse(
+                        vehicleService.createVehicle(request, auth.getName())
+                ));
     }
+
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public ResponseEntity<APIResponse> editVehicle(@PathVariable Long id,
-                                                       @RequestBody Vehicle vehicle,
-                                                       Authentication authentication) {
-        Vehicle updatedVehicle = vehicleService.editVehicle(id, vehicle, authentication);
-        String message = "Vehicle with id " + updatedVehicle.getId() + " was updated successfully.";
-        return ResponseEntity.ok(new APIResponse(message, HttpStatus.OK));
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public VehicleResponse update(
+            @PathVariable Long id,
+            @Valid @RequestBody VehicleRequest request,
+            Authentication auth
+    ) {
+        return vehicleMapper.toResponse(
+                vehicleService.updateVehicle(id, request, auth.getName())
+        );
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public ResponseEntity<APIResponse> deleteVehicle(@PathVariable Long id,
-                                                        Authentication authentication) {
-        vehicleService.deleteVehicle(id, authentication);
-        String message = "Vehicle with id " + id + " was deleted successfully.";
-        return ResponseEntity.ok(new APIResponse(message, HttpStatus.OK));
-    }
-
-    @GetMapping("/myVehicles")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public List<Vehicle> getMyVehicles(Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
-        return vehicleService.getVehiclesByUser(user);
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id,
+            Authentication auth
+    ) {
+        vehicleService.deleteVehicle(id, auth.getName());
+        return ResponseEntity.noContent().build();
     }
 }

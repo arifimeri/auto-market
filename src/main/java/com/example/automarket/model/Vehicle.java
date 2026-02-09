@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 @Table
@@ -32,7 +36,11 @@ public class Vehicle {
     private TransmissionType transmissionType;
 
     private Boolean serviceHistory;
-    private Double price;
+    private BigDecimal price;
+
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC")
+    private List<VehicleImage> images = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

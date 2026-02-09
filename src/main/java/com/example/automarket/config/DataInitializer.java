@@ -6,12 +6,15 @@ import com.example.automarket.enums.VehicleType;
 import com.example.automarket.enums.Role;
 import com.example.automarket.model.User;
 import com.example.automarket.model.Vehicle;
+import com.example.automarket.repository.VehicleRepository;
 import com.example.automarket.service.UserService;
 import com.example.automarket.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -24,6 +27,10 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private VehicleRepository vehicleRepository;
+
 
     @Override
     public void run(String... args) throws Exception {
@@ -41,14 +48,15 @@ public class DataInitializer implements CommandLineRunner {
 
     private User createUserIfNotExists(String username, String password, Role role) {
         if (!userService.existsByUsername(username)) {
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword(passwordEncoder.encode(password));
-            user.setRole(role);
-            return userService.saveUser(user);
+            return userService.createUser(
+                    username,
+                    passwordEncoder.encode(password),
+                    role
+            );
         }
         return userService.findByUsername(username);
     }
+
 
     private void createVehicleIfNotExists(User user,
                                           String brand,
@@ -62,9 +70,10 @@ public class DataInitializer implements CommandLineRunner {
                                           Boolean serviceHistory,
                                           Double price) {
 
-        Boolean exists = vehicleService.existsByBrandAndModelAndEngineAndYear(
-                brand, model, engine, year
-        );
+        boolean exists = vehicleRepository
+                .existsByBrandAndModelAndEngineAndManufactureYear(
+                        brand, model, engine, year
+                );
 
         if (!exists) {
             Vehicle vehicle = new Vehicle();
@@ -78,10 +87,10 @@ public class DataInitializer implements CommandLineRunner {
             vehicle.setFuelType(fuelType);
             vehicle.setTransmissionType(transmission);
             vehicle.setServiceHistory(serviceHistory);
-            vehicle.setPrice(price);
+            vehicle.setPrice(BigDecimal.valueOf(price));
             vehicle.setType(VehicleType.CAR);
 
-            vehicleService.saveVehicle(vehicle);
+            vehicleRepository.save(vehicle);
         }
     }
 }
