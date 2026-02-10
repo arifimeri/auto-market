@@ -1,58 +1,50 @@
 package com.example.automarket.controller;
 
-import com.example.automarket.model.User;
-import com.example.automarket.response.APIResponse;
+import com.example.automarket.dto.request.UserRequest;
+import com.example.automarket.dto.response.UserResponse;
 import com.example.automarket.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
-@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
 
+    @GetMapping("/me")
+    public UserResponse getCurrentUser(Authentication auth) {
+        return userService.getCurrentUser(auth.getName());
+    }
+
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<User> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<APIResponse> createUser(@RequestBody User user) {
-        User newUser = userService.saveUser(user);
-        String message = "User with username " + newUser.getUsername() + " was created successfully.";
-        return ResponseEntity.ok(new APIResponse(message, HttpStatus.OK));
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest request) {
+        UserResponse createdUser = userService.createUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<APIResponse> editUser(@PathVariable Long id, @RequestBody User user) {
-        User updatedUser = userService.editUser(id, user);
-        String message = "User with id " + updatedUser.getId() + " was updated successfully.";
-        return ResponseEntity.ok(new APIResponse(message, HttpStatus.OK));
+    public UserResponse updateUser(@PathVariable Long id,
+                                   @Valid @RequestBody UserRequest request,
+                                   Authentication auth) {
+        return userService.updateUser(id, request, auth.getName());
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<APIResponse> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        String message = "User with id " + id + " was deleted successfully.";
-        return ResponseEntity.ok(new APIResponse(message, HttpStatus.OK));
-    }
-
-    @GetMapping("/me")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public User getMyProfile(Authentication authentication){
-        String username = authentication.getName();
-        return userService.findByUsername(username);
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id, Authentication auth) {
+        userService.deleteUser(id, auth.getName());
+        return ResponseEntity.noContent().build();
     }
 }

@@ -20,43 +20,27 @@ public class VehicleImageController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<Void> upload(
-            @PathVariable Long vehicleId,
-            @RequestParam MultipartFile file,
-            Authentication auth
-    ) {
+    public ResponseEntity<Void> upload(@PathVariable Long vehicleId, @RequestParam MultipartFile file, Authentication auth) {
         vehicleService.addImage(vehicleId, file, auth.getName());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{imageId}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<Void> delete(
-            @PathVariable Long vehicleId,
-            @PathVariable Long imageId,
-            Authentication auth
-    ) {
+    public ResponseEntity<Void> delete(@PathVariable Long vehicleId, @PathVariable Long imageId, Authentication auth) {
         vehicleService.deleteImage(vehicleId, imageId, auth.getName());
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{imageId}/primary")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public void setPrimary(
-            @PathVariable Long vehicleId,
-            @PathVariable Long imageId,
-            Authentication auth
-    ) {
+    public void setPrimary(@PathVariable Long vehicleId, @PathVariable Long imageId, Authentication auth) {
         vehicleService.setPrimaryImage(vehicleId, imageId, auth.getName());
     }
 
     @PutMapping("/reorder")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public void reorder(
-            @PathVariable Long vehicleId,
-            @RequestBody List<Long> orderedIds,
-            Authentication auth
-    ) {
+    public void reorder(@PathVariable Long vehicleId, @RequestBody List<Long> orderedIds, Authentication auth) {
         vehicleService.reorderImages(vehicleId, orderedIds, auth.getName());
     }
 }

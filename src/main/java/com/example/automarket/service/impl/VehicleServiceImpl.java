@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.automarket.service.FileStorageService;
@@ -108,7 +110,12 @@ public class VehicleServiceImpl implements VehicleService {
     // =========================
 
     private void authorize(Vehicle vehicle, String username) {
-        if (!vehicle.getUser().getUsername().equals(username)) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!vehicle.getUser().getUsername().equals(username) && !isAdmin) {
             throw new VehicleAccessDeniedException(
                     "You do not have permission to modify this vehicle"
             );

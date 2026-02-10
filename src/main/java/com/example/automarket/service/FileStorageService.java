@@ -1,6 +1,6 @@
 package com.example.automarket.service;
 
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,8 +25,6 @@ public class FileStorageService {
             Path targetPath = Paths.get(uploadDir).resolve(filename);
 
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-
-            // kjo URL do të përdoret nga frontend
             return "/uploads/" + filename;
 
         } catch (IOException e) {

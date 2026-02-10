@@ -1,5 +1,7 @@
 package com.example.automarket.service;
 
+import com.example.automarket.dto.request.UserRequest;
+import com.example.automarket.dto.response.UserResponse;
 import com.example.automarket.enums.Role;
 import com.example.automarket.model.User;
 
@@ -7,16 +9,15 @@ import java.util.List;
 
 public interface UserService {
 
-    List<User> getAllUsers();
+    List<UserResponse> getAllUsers();
 
-    User createUser(String username, String encodedPassword, Role role);
+    UserResponse getCurrentUser(String username);
 
+    UserResponse createUser(UserRequest request);
 
-    User saveUser(User user);
+    UserResponse updateUser(Long id, UserRequest request, String currentUsername);
 
-    User editUser(Long id, User user);
-
-    void deleteUser(Long id);
+    void deleteUser(Long id, String currentUsername);
 
     boolean existsByUsername(String username);
 
@@ -25,4 +26,5 @@ public interface UserService {
     List<String> getRolesForUser(String username);
 
     User registerUser(User user);
+
 }

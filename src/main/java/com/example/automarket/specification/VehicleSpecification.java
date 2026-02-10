@@ -1,6 +1,7 @@
 package com.example.automarket.specification;
 
 import com.example.automarket.model.Vehicle;
+import io.micrometer.common.lang.NonNull;
 import org.springframework.data.jpa.domain.Specification;
 
 public class VehicleSpecification {
@@ -18,6 +19,11 @@ public class VehicleSpecification {
 
     public static Specification<Vehicle> priceBetween(
             Integer min, Integer max) {
+        return getVehicleSpecification(min, max);
+    }
+
+    @NonNull
+    private static Specification<Vehicle> getVehicleSpecification(Integer min, Integer max) {
         return (root, query, cb) -> {
             if (min == null && max == null) return null;
             if (min == null) return cb.lessThanOrEqualTo(root.get("manufactureYear"), max);
@@ -28,12 +34,7 @@ public class VehicleSpecification {
 
     public static Specification<Vehicle> yearBetween(
             Integer min, Integer max) {
-        return (root, query, cb) -> {
-            if (min == null && max == null) return null;
-            if (min == null) return cb.lessThanOrEqualTo(root.get("manufactureYear"), max);
-            if (max == null) return cb.greaterThanOrEqualTo(root.get("manufactureYear"), min);
-            return cb.between(root.get("manufactureYear"), min, max);
-        };
+        return getVehicleSpecification(min, max);
     }
 
     public static Specification<Vehicle> fuelType(String fuelType) {

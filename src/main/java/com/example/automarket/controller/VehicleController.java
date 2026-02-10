@@ -15,17 +15,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/vehicles")
 @RequiredArgsConstructor
-@RequestMapping("/api/vehicles")
 public class VehicleController {
 
     private final VehicleService vehicleService;
     private final VehicleMapper vehicleMapper;
 
-    // ======================
-    // PUBLIC – SEARCH + LIST
-    // ======================
-
+    // ===================== SEARCH / GET ALL =====================
     @GetMapping
     public Page<VehicleResponse> searchVehicles(
             @RequestParam(required = false) String brand,
@@ -44,56 +41,46 @@ public class VehicleController {
     }
 
     @GetMapping("/{id}")
-    public VehicleResponse getById(@PathVariable Long id) {
-        return vehicleMapper.toResponse(
-                vehicleService.getVehicleById(id)
-        );
+    public ResponseEntity<VehicleResponse> getById(@PathVariable Long id) {
+        VehicleResponse vehicle = vehicleMapper.toResponse(vehicleService.getVehicleById(id));
+        return ResponseEntity.ok(vehicle);
     }
 
-    // ======================
-    // AUTHENTICATED
-    // ======================
-
+    // ===================== GET MY VEHICLES =====================
     @GetMapping("/my")
-    public Page<VehicleResponse> myVehicles(
-            Authentication auth,
-            Pageable pageable
-    ) {
-        return vehicleService
-                .getVehiclesByUser(auth.getName(), pageable)
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public Page<VehicleResponse> getMyVehicles(Authentication auth, Pageable pageable) {
+        return vehicleService.getVehiclesByUser(auth.getName(), pageable)
                 .map(vehicleMapper::toResponse);
     }
 
+    // ===================== CREATE VEHICLE =====================
     @PostMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<VehicleResponse> create(
-            @Valid @RequestBody VehicleRequest request,
-            Authentication auth
-    ) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(vehicleMapper.toResponse(
-                        vehicleService.createVehicle(request, auth.getName())
-                ));
+    public ResponseEntity<VehicleResponse> createVehicle(@Valid @RequestBody VehicleRequest request,
+                                                         Authentication auth) {
+        VehicleResponse createdVehicle = vehicleMapper.toResponse(
+                vehicleService.createVehicle(request, auth.getName())
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdVehicle);
     }
 
+    // ===================== UPDATE VEHICLE =====================
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public VehicleResponse update(
-            @PathVariable Long id,
-            @Valid @RequestBody VehicleRequest request,
-            Authentication auth
-    ) {
-        return vehicleMapper.toResponse(
+    public ResponseEntity<VehicleResponse> updateVehicle(@PathVariable Long id,
+                                                         @Valid @RequestBody VehicleRequest request,
+                                                         Authentication auth) {
+        VehicleResponse updatedVehicle = vehicleMapper.toResponse(
                 vehicleService.updateVehicle(id, request, auth.getName())
         );
+        return ResponseEntity.ok(updatedVehicle);
     }
 
+    // ===================== DELETE VEHICLE =====================
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<Void> delete(
-            @PathVariable Long id,
-            Authentication auth
-    ) {
+    public ResponseEntity<Void> deleteVehicle(@PathVariable Long id, Authentication auth) {
         vehicleService.deleteVehicle(id, auth.getName());
         return ResponseEntity.noContent().build();
     }
