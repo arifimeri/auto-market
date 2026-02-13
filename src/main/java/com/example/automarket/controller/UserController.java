@@ -1,5 +1,6 @@
 package com.example.automarket.controller;
 
+import com.example.automarket.dto.request.ChangePasswordRequest;
 import com.example.automarket.dto.request.UserRequest;
 import com.example.automarket.dto.response.UserResponse;
 import com.example.automarket.service.UserService;
@@ -41,6 +42,14 @@ public class UserController {
                                    Authentication auth) {
         return userService.updateUser(id, request, auth.getName());
     }
+
+    @PutMapping("/{id}/change-password")
+    public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request,
+                                                 Authentication auth) {
+        userService.changePassword(id, request, auth.getName());
+        return ResponseEntity.ok("Password has been changed successfully!");
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id, Authentication auth) {

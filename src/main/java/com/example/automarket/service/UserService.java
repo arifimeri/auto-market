@@ -1,5 +1,6 @@
 package com.example.automarket.service;
 
+import com.example.automarket.dto.request.ChangePasswordRequest;
 import com.example.automarket.dto.request.UserRequest;
 import com.example.automarket.dto.response.UserResponse;
 import com.example.automarket.enums.Role;
@@ -27,4 +28,5 @@ public interface UserService {
 
     User registerUser(User user);
 
+    void changePassword(Long id, ChangePasswordRequest request, String authUsername);
 }

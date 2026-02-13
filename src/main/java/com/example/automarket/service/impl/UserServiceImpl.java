@@ -1,5 +1,6 @@
 package com.example.automarket.service.impl;
 
+import com.example.automarket.dto.request.ChangePasswordRequest;
 import com.example.automarket.dto.request.UserRequest;
 import com.example.automarket.dto.response.UserResponse;
 import com.example.automarket.exception.userExeption.UserNotFoundException;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final UserMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -122,6 +124,19 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
         return userRepository.save(user);
+    }
+
+    public void changePassword(Long id, ChangePasswordRequest request, String authUsername) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        if (!user.getUsername().equals(authUsername)) {
+            throw new AccessDeniedException("Cannot change another user's password!");
+        }
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new RuntimeException("Old password is not correct, please try again!");
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 
 }
