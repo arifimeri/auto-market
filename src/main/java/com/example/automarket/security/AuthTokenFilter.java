@@ -31,6 +31,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getServletPath();
+        if (path.startsWith("/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = parseJwt(request);
 
         if (token != null && jwtUtils.validateJwtToken(token)) {
